@@ -1,0 +1,6 @@
+/.expo
+node_modules
+android
+assets/db
+excluded
+drizzle
