@@ -1,18 +1,17 @@
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { Button, Platform, StyleSheet, Text, View } from "react-native";
 import Constants from "expo-constants";
 import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { desc } from "drizzle-orm";
-
 import { useEffect, useState } from "react";
 import { topics } from "@/drizzle/schema";
 import { FlashList } from "@shopify/flash-list";
-
+import { Link, router } from "expo-router";
 function Content() {
   const sqlite_db = useSQLiteContext();
   const db = drizzle(sqlite_db);
-  // useDrizzleStudio(sqlite_db);
   const all_topics = db.select().from(topics).orderBy(desc(topics)).all();
+
   if (all_topics.length === 0)
     return (
       <View>
@@ -25,14 +24,18 @@ function Content() {
       data={all_topics}
       estimatedItemSize={70}
       renderItem={({ item: topic }) => (
-        <Text style={{ textAlign: "left" }}>
-          {topic.id}
-          {"\n"}
-          {topic.title}
-          {"\n"}
-          {topic.user_id}
-          {"\n"}
-        </Text>
+        <>
+          <Link key={topic.id} href={`/post?id=${topic.id}`}>
+            <Text style={{ color: "green", textAlign: "left" }}>
+              {topic.id}
+              {"\n"}
+              {topic.title}
+              {"\n"}
+              {topic.user_id}
+              {"\n"}
+            </Text>
+          </Link>
+        </>
       )}
     />
   );
@@ -66,7 +69,7 @@ export function Header() {
   useEffect(() => {
     async function setup() {
       const result = await db.getFirstAsync<{ "sqlite_version()": string }>(
-        "SELECT sqlite_version()",
+        "SELECT sqlite_version()"
       );
       if (result) {
         setVersion(result["sqlite_version()"]);

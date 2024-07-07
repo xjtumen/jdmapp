@@ -55,7 +55,7 @@ export const posts = sqliteTable(
     return {
       idxTopic: index("idxTopic").on(table.topic_id, table.post_number),
     };
-  },
+  }
 );
 
 export const likes = sqliteTable(
@@ -69,5 +69,5 @@ export const likes = sqliteTable(
     return {
       idxLikes: uniqueIndex("idxLikes").on(table.post_id, table.user_id),
     };
-  },
+  }
 );
